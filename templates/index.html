@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Liên đoàn Võ Cổ Truyền Tây Ninh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/giaoDienChinh.css') }}">
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header text-center">
+    <img src="{{ url_for('static', filename='img/header.jpg') }}" alt="Header" class="img-fluid w-100">
+  </header>
+
+  <!-- Navbar -->
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <!-- Nút toggle -->
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarMain"
+            aria-controls="navbarMain"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Menu -->
+    <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
+      <ul class="navbar-nav mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active fw-bold" href="{{ url_for('home') }}">TRANG CHỦ</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">GIỚI THIỆU</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Ban Chấp Hành</a></li>
+            <li><a class="dropdown-item" href="#">Tôn chỉ & Mục đích</a></li>
+            <li><a class="dropdown-item" href="#">Lịch sử hình thành</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">TIN TỨC</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Thông báo</a></li>
+            <li><a class="dropdown-item" href="#">Hoạt động liên đoàn</a></li>
+            <li><a class="dropdown-item" href="#">Hoạt động CLB</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">LIÊN KẾT</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">CÂU LẠC BỘ</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Danh sách lớp võ</a></li>
+            <li><a class="dropdown-item" href="#">Đội ngũ HLV</a></li>
+            <li><a class="dropdown-item" href="#">Lịch tập luyện</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">TÀI LIỆU</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Văn bản, quy chế</a></li>
+            <li><a class="dropdown-item" href="#">Các mẫu đơn</a></li>
+            <li><a class="dropdown-item" href="#">Bảng điểm các kỳ thi</a></li>
+            <li><a class="dropdown-item" href="#">Thư viện hình ảnh – video</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-warning" href="#" data-bs-toggle="dropdown">ĐĂNG NHẬP</a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#" data-role="admin">Admin</a></li>
+            <li><a class="dropdown-item" href="#" data-role="hlv">Huấn luyện viên</a></li>
+            <li><a class="dropdown-item" href="#" data-role="hoivien">Hội viên</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Hero -->
+  <section class="hero text-center py-5 bg-light">
+    <h1 class="display-4 fw-bold">VÕ CỔ TRUYỀN VIỆT NAM</h1>
+    <p class="slogan fs-5">Rèn thân – Luyện tâm – Dựng chí</p>
+  </section>
+
+  <!-- Search -->
+  <div class="search-box text-center my-4">
+    <div class="input-group mx-auto" style="max-width: 400px;">
+      <input type="text" class="form-control" placeholder="Nhập mã số võ sinh">
+      <button class="btn btn-primary">Tra cứu</button>
+    </div>
+  </div>
+
+<!-- Modal Login -->
+<div id="loginModal" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3" style="max-width: 350px; margin: auto;">
+      <div class="modal-header">
+        <h5 class="modal-title">Đăng nhập <span id="loginRole"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="loginForm">
+          <input type="hidden" name="role" id="hiddenRole" value="">
+          <div class="mb-3">
+            <input type="text" name="username" class="form-control" placeholder="Tên đăng nhập" required>
+          </div>
+          <div class="mb-3">
+            <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Đăng nhập</button>
+        </form>
+        <p id="loginError" class="text-danger mt-2"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Script xử lý đăng nhập -->
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const loginModalEl = document.getElementById("loginModal");
+    const loginModal = new bootstrap.Modal(loginModalEl);
+    const loginForm = document.getElementById("loginForm");
+    const loginRoleSpan = document.getElementById("loginRole");
+    const hiddenRole = document.getElementById("hiddenRole");
+    const loginError = document.getElementById("loginError");
+
+    // Khi click menu "Đăng nhập"
+    document.querySelectorAll("a[data-role]").forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const role = (link.dataset.role || "").trim().toLowerCase();
+        if (!role) return;
+
+        loginRoleSpan.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+        hiddenRole.value = role;
+        loginForm.reset();
+        loginError.textContent = "";
+
+        loginModal.show();
+      });
+    });
+
+    // Xử lý khi submit
+    // Xử lý khi submit
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(loginForm);
+  try {
+    const res = await fetch(`/login/${hiddenRole.value}`, {
+      method: "POST",
+      body: formData
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      window.location.href = data.redirect; // ví dụ: /quantri
+    } else {
+      loginError.textContent = data.error || "Sai tài khoản hoặc mật khẩu!";
+    }
+  } catch (err) {
+    loginError.textContent = "Không kết nối được server!";
+  }
+});
+
+  });
+  </script>
+</body>
+</html>

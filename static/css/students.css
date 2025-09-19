@@ -1,0 +1,35 @@
+/* Bảng võ sinh đẹp hơn */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.belt-img {
+    height: 30px;
+    width: auto;
+}
+
+.btn-group a {
+    margin-right: 5px;
+}
+
+/* Responsive nhỏ màn hình */
+@media (max-width: 768px) {
+    .table th, .table td {
+        font-size: 12px;
+        padding: 5px;
+    }
+    .btn-group a, .btn-group button {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+}
