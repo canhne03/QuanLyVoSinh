@@ -129,10 +129,12 @@
 /* ========== THANH TÌM KIẾM ========== */
 .search-box {
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* Ép các phần tử xếp từ trên xuống dưới */
+  align-items: center;    /* Căn giữa theo chiều ngang */
   margin: 0;
   padding: 0 40px;
 }
+
 .search-box input {
   width: 300px;
   max-width: 70%;

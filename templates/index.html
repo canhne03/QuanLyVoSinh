@@ -11,7 +11,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/giaoDienChinh.css') }}">
-  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 
 </head>
 <body>
@@ -97,13 +97,21 @@
     <p class="slogan fs-5">Rèn thân – Luyện tâm – Dựng chí</p>
   </section>
 
-  <!-- Search -->
-  <div class="search-box text-center my-4">
-    <div class="input-group mx-auto" style="max-width: 400px;">
-      <input type="text" class="form-control" placeholder="Nhập mã số võ sinh">
-      <button class="btn btn-primary">Tra cứu</button>
-    </div>
+<!-- Search Box -->
+<div class="search-box text-center my-4">
+  <div class="input-group mx-auto" style="max-width: 400px;">
+    <input type="text" class="form-control" id="searchInput" placeholder="Nhập tên hoặc mã số võ sinh">
+    <button class="btn btn-primary" id="searchBtn">Tra cứu</button>
   </div>
+
+<!-- Kết quả nằm ngay dưới input -->
+<div id="searchResultContainer" class="mt-2" style="display:none; max-width: 400px; margin: 0 auto;">
+  <div class="card shadow p-2">
+    <div id="searchResult"><!-- Thông tin võ sinh render vào đây --></div>
+  </div>
+</div>
+
+
 
 <!-- Modal Login -->
 <div id="loginModal" class="modal fade" tabindex="-1">

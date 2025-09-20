@@ -4,6 +4,7 @@ import re
 import os
 from io import BytesIO
 from werkzeug.utils import secure_filename
+from flask import jsonify
 
 from openpyxl import Workbook
 from openpyxl.drawing.image import Image as XLImage
@@ -37,8 +38,8 @@ init_db(app)
 ALLOWED_EXT = {".xlsx", ".xls", ".csv"}
 
 # ====== Tài khoản admin mặc định ======
-ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "123456"
+ADMIN_USERNAME = "Admin"
+ADMIN_PASSWORD = "123"
 
 
 # ====== Hàm tính sắp tự nhiên A1 < A2 < A10 ======
@@ -417,7 +418,44 @@ def admin_students_update(vocotruyenid):
     db.session.commit()
     return redirect(url_for("admin_students"))
 
+@app.route("/search/student", methods=["GET"])
+def search_student():
+    query = request.args.get("q", "").strip()
 
+    if not query:
+        return jsonify({"success": False, "error": "Vui lòng nhập tên hoặc mã số!"})
+
+    # Tìm theo mã số chính xác hoặc tên chứa query
+    students = HoSoVoSinh.query.filter(
+        (HoSoVoSinh.vocotruyenid.ilike(f"%{query}%")) |
+        (HoSoVoSinh.hovaten.ilike(f"%{query}%"))
+    ).all()
+
+    if not students:
+        return jsonify({"success": False, "error": "Không tìm thấy võ sinh nào!"})
+
+    # Chuyển dữ liệu sang dict
+    result = []
+    for s in students:
+        # Lấy các thông tin đầy đủ, bao gồm màu đai (rel path)
+        result.append({
+            "vocotruyenid": s.vocotruyenid,
+            "hovaten": s.hovaten,
+            "namsinh": s.namsinh,
+            "gioitinh": s.gioitinh,
+            "donvi": s.donvi,
+            "capbac": s.capbac,
+            "trinhdo": s.trinhdo,
+            "maudai": url_for('static', filename=s.maudai) if s.maudai else None,
+            "thanhtich": s.thanhtich,
+            "ngaydangky": None,  # nếu có nhiều đăng ký, lấy đăng ký gần nhất
+        })
+
+        if s.dangky:
+            latest_dk = max(s.dangky, key=lambda d: d.ngaydk)
+            result[-1]["ngaydangky"] = latest_dk.ngaydk.strftime("%d/%m/%Y %H:%M")
+
+    return jsonify({"success": True, "students": result})
 # ---------------- MAIN ----------------
 if __name__ == "__main__":
     # debug=True chỉ dùng khi dev
