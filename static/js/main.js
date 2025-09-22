@@ -58,31 +58,31 @@ document.addEventListener("DOMContentLoaded", () => {
   // Thêm nút đóng vào container
   searchResultContainer.prepend(closeSearchResult);
 
-  // Hàm render danh sách võ sinh
-  const renderStudents = (students) => {
-    if (!students || students.length === 0)
-      return '<div class="text-muted">Không tìm thấy võ sinh nào.</div>';
+const renderStudents = (students) => {
+  if (!students || students.length === 0)
+    return '<div class="text-muted">Không tìm thấy võ sinh nào.</div>';
 
-    return students.map(s => `
-      <div class="mb-2 p-2 border-bottom d-flex align-items-start">
-        <div style="flex:1; display:flex;">
-          <div class="ms-2">
-            <h5 class="mb-1">${s.hovaten} <small class="text-muted">(${s.vocotruyenid})</small></h5>
-            <p class="mb-1"><strong>Năm sinh:</strong> ${s.namsinh || "-"} | <strong>Giới tính:</strong> ${s.gioitinh || "-"}</p>
-            <p class="mb-1"><strong>Đơn vị:</strong> ${s.donvi || "-"}</p>
-            <p class="mb-1"><strong>Cấp bậc:</strong> ${s.capbac || "-"} | <strong>Trình độ:</strong> ${s.trinhdo || "-"}</p>
-            <p class="mb-1"><strong>Thành tích:</strong> ${s.thanhtich || "-"}</p>
-             <p class="mb-1">
-                <strong>Màu đai:</strong>
-                ${s.maudai ? `<img src="${s.maudai}" alt="Màu đai" style="height:24px; vertical-align:middle; margin-left:4px;">` : '-'}
-             </p>
-            <p class="mb-0"><small class="text-muted">Ngày thi: ${s.ngaydangky || "-"}</small></p>
-
-          </div>
-        </div>
+  return students.map(s => {
+const imgSrc = s.maudai ? s.maudai : '/static/img/default.png';
+    return `
+      <div class="mb-2 p-3 border-bottom" style="text-align:left; margin-left:40px;">
+        <h5 class="mb-1"><strong>Họ và tên:</strong> ${s.hovaten } <small class="text-muted">(${s.vocotruyenid})</small></h5>
+        <p class="mb-1"><strong>Năm sinh:</strong> ${s.namsinh || "-"}</p>
+        <p class="mb-1"><strong>Giới tính:</strong> ${s.gioitinh || "-"}</p>
+        <p class="mb-1"><strong>Đơn vị:</strong> ${s.donvi || "-"}</p>
+        <p class="mb-1"><strong>Cấp bậc:</strong> ${s.capbac || "-"}</p>
+        <p class="mb-1"><strong>Ngày thi:</strong> ${s.ngaydangky || "-"}</small></p>
+        <p class="mb-1"><strong>Trình độ:</strong> ${s.trinhdo || "-"}</p>
+        <p class="mb-1"><strong>Thành tích:</strong> ${s.thanhtich || "-"}</p>
+        <p class="mb-1">
+          <strong>Màu đai:</strong>
+          <img src="${imgSrc}" alt="Màu đai" style="height:24px; vertical-align:middle; margin-left:4px;">
+        </p>
       </div>
-    `).join("");
-  };
+    `;
+  }).join("");
+};
+
 
   // Xử lý nút Tra cứu
   searchBtn.addEventListener("click", async () => {
@@ -112,3 +112,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+

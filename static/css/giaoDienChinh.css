@@ -1,123 +1,152 @@
+ở mobile tôi muốn khi mở các menu ra thì toggle tự động co theo nội dung
 /* ========== TOÀN TRANG ========== */
-* {
-  font-family: "Times New Roman", Times, serif;
-  font-size: 16px;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+html, body, input, textarea, select, button {
+    font-family: "Times New Roman", Times, serif !important;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* ========== HEADER ========== */
 .header {
   width: 100%;
-  height: auto; /* tự co theo ảnh */
+  height: auto;
   margin: 0 auto;
   border-radius: 12px;
 }
+
 .header img {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
-/* ========== MENU (Bootstrap Navbar) ========== */
+/* ========== NAVBAR CHUNG ========== */
 .navbar {
+  background-color: #fff !important;
   border-bottom: 1px solid #ddd;
 }
 
-/* Link menu */
-.navbar .nav-link {
-  color: #fff !important;
-  font-weight: 600;   /* đồng đều như Trang chủ */
-  padding: 0.4rem 1rem; /* giảm khoảng cách trên dưới */
-  line-height: 1.2;
+/* Link menu chung */
+@media (max-width: 991.98px) {
+    .navbar .nav-link {
+      color: #000 !important;
+      padding: 0.4rem 1rem;
+      line-height: 1.2;
+    }
 }
-
 .navbar .nav-link:hover {
   color: #ffc107 !important;
 }
 
-/* Dropdown */
-.dropdown-menu {
-  background-color: #212529;
-  border: none;
-  padding: 0.25rem 0; /* bỏ khoảng trắng thừa */
-}
+/* ========== DROPDOWN MENU ========== */
 
-.dropdown-item {
-  color: #fff !important;
-  padding: 0.3rem 1rem;
-  line-height: 1.2;
-}
-
-.dropdown-item:hover {
-  background: #ffd633 !important;
-  color: #000 !important;
-}
-
-/* Menu desktop căn giữa */
+/* --- Desktop dropdown --- */
 @media (min-width: 992px) {
-  .navbar-nav {
-    margin: 0 auto; /* căn giữa toàn bộ menu */
+  .dropdown-menu {
+    background-color: #fff !important; /* nền trắng */
+    border: none;
+    border-radius: 6px;
+    min-width: 180px;
+    padding: 0;
+  }
+
+  .dropdown-menu .dropdown-item {
+    color: #000 !important;
+  }
+
+  .dropdown-menu .dropdown-item:hover {
+    background-color: #ffc107 !important;
+    color: #000 !important;
   }
 }
 
-/* Mobile menu */
-@media (max-width: 991px) {
-  /* Toggle icon (3 gạch) nằm bên trái */
-  .navbar-toggler {
-    order: -1; /* đưa icon ra trước brand */
-    margin-right: auto;
-    margin-left: 0.5rem;
+/* --- Mobile dropdown --- */
+@media (max-width: 991.98px) {
+  .navbar-nav .dropdown-menu {
+    position: static;
+    float: none;
+    width: max-content;
+    border-radius: 0;
+    padding: 0;
+    background-color: #004390 !important; /* nền xanh */
+    border: none !important;
+    box-shadow: none !important;
   }
 
-  /* Brand nằm sau toggle */
-  .navbar-brand {
-    order: 0;
-    margin-left: auto;
-    margin-right: 0.5rem;
+  .dropdown-menu .dropdown-item {
+    color: #fff !important;
+    padding: 6px 35px;
+    font-weight: 400 !important;
+    text-align: left;
+    padding-right: 0 !important;
   }
 
-  /* Menu xổ ra từ bên trái */
+  .dropdown-menu .dropdown-item:hover {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+  }
+}
+
+/* ========== TOGGLE ========== */
+.navbar-toggler {
+  padding: 0;
+  border-radius: 6px;
+  display: flex;
+  align-items: left;
+  justify-content: left;
+  border: none !important;      /* bỏ border mặc định */
+  box-shadow: none !important;  /* bỏ shadow focus */
+  outline: none !important;     /* bỏ outline xanh */
+}
+
+.navbar-toggler-icon {
+  background-size: 30px 30px;
+}
+
+@media (max-width: 991.98px) {
   .navbar-collapse {
     position: absolute;
     top: 100%;
-    left: 0;   /* thay vì right */
-    background-color: #212529;
-    width: auto;
-    min-width: 200px;
-    border-radius: 0 0 6px 6px;
-    padding: 0.5rem 0.5rem;
-    z-index: 1000;
+    left: 0;               /* dính sát trái */
+    width: max-content;    /* co theo đúng nội dung */
+    background: #004390;   /* hoặc màu bạn muốn */
+    z-index: 1050;
+    padding: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    height: 0;
+    transition: height 0.2s ease-in-out;
   }
 
-  .navbar-collapse .nav-item {
+  .navbar-collapse.show {
+    height: auto;          /* bung ra theo nội dung */
+  }
+  .navbar-nav .nav-link {
+    color: #fff !important;
     text-align: left;
-  }
-
-  .navbar-collapse .dropdown-menu {
-    background-color: #212529;
-    border: none;
-    padding-left: 1.2rem; /* submenu thụt vào */
-  }
+   }
 }
 
 /* ========== HERO ========== */
 .hero {
   text-align: center;
-  padding: 15px 20px;
+  padding: 10px 10px;
 }
+
 .hero h1 {
   font-size: 2.5rem;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
+
 .hero .slogan {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
+  font-size: 1rem;
+  margin-bottom: 0px;
   color: #555;
 }
+
 .hero .btn {
-  padding: 12px 24px;
+  padding: 8px 16px;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
@@ -128,47 +157,57 @@
 
 /* ========== THANH TÌM KIẾM ========== */
 .search-box {
-  display: flex;
-  flex-direction: column; /* Ép các phần tử xếp từ trên xuống dưới */
-  align-items: center;    /* Căn giữa theo chiều ngang */
+  align-items: center;
   margin: 0;
   padding: 0 40px;
 }
 
 .search-box input {
   width: 300px;
-  max-width: 70%;
-  padding: 10px 15px;
-  border: 1px solid #ccc;
+  max-width: 80%;
+  padding: 10px 10px;
+  border: 2px solid #000;
   border-radius: 8px 0 0 8px;
   font-size: 1rem;
   outline: none;
 }
-.search-box button {
-  padding: 10px 20px;
-  border: 1px solid #d7263d;
-  background: #d7263d;
-  color: #fff;
-  border-radius: 0 8px 8px 0;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s;
+
+.search-box input:focus,
+.search-box input:hover {
+  border-color: #000 !important;  /* giữ viền đen */
+  box-shadow: none !important;    /* bỏ ánh sáng xanh */
+  outline: none !important;       /* bỏ viền xanh mặc định */
 }
+
+.search-box button {
+  border: 2px solid #000;      /* viền xanh lá */
+  background: #fff;            /* nền xanh nước biển */
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: background 0.3s, border-color 0.3s;
+}
+
 .search-box button:hover {
-  background: #b71c30;
+  background: #007BFF;         /* xanh biển đậm khi hover */
+  border-color: #000;          /* viền xanh lá đậm hơn khi hover */
 }
 
 /* ========== MODAL ĐĂNG NHẬP ========== */
 .modal {
   display: none;
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0,0,0,0.5);
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
+
 .modal-content {
   background: #fff;
   padding: 24px;
@@ -178,6 +217,7 @@
   text-align: center;
   position: relative;
 }
+
 .modal-content input {
   width: 100%;
   padding: 10px;
@@ -185,6 +225,7 @@
   border-radius: 8px;
   border: 1px solid #ccc;
 }
+
 .modal-content button {
   padding: 10px 20px;
   border: none;
@@ -193,6 +234,7 @@
   color: #fff;
   cursor: pointer;
 }
+
 .modal .close {
   position: absolute;
   top: 10px;
@@ -200,6 +242,7 @@
   cursor: pointer;
   font-size: 20px;
 }
+
 .modal {
   z-index: 2000 !important;
 }
@@ -207,9 +250,13 @@
 .modal-backdrop {
   z-index: 1999 !important;
 }
+
 #loginModal .modal-dialog {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh; /* chiếm toàn màn hình để căn giữa dọc */
+  min-height: 100vh;
 }
+
+
+

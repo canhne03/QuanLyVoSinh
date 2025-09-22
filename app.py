@@ -312,7 +312,7 @@ def admin_students_import():
                 db.session.add(new_s)
 
         db.session.commit()
-        flash("Import thành công!")
+
         return redirect(url_for("admin_students"))
 
     return render_template("admin/import_students.html")
@@ -446,7 +446,7 @@ def search_student():
             "donvi": s.donvi,
             "capbac": s.capbac,
             "trinhdo": s.trinhdo,
-            "maudai": url_for('static', filename=s.maudai) if s.maudai else None,
+            "maudai": url_for('static', filename=f"img/{s.maudai}") if s.maudai else None,
             "thanhtich": s.thanhtich,
             "ngaydangky": None,  # nếu có nhiều đăng ký, lấy đăng ký gần nhất
         })

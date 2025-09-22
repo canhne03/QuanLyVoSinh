@@ -1,91 +1,83 @@
 {% extends "quantri.html" %}
 {% block content %}
-<h3>Quản lý Võ Sinh</h3>
+<style>
+* { font-family:"Times New Roman", Times, serif; margin:0; padding:0; box-sizing:border-box; font-size:16px; }
 
-<div class="mb-3 d-flex align-items-center gap-2 justify-content-end">
-  <!-- Nút thêm mới -->
-  <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addStudentModal">
-    + Thêm Võ Sinh
-  </button>
+.header { width:100%; margin:0 auto; border-radius:12px; }
+.header img { max-width:100%; height:auto; display:block; }
 
-  <!-- Import Excel -->
+.navbar { border-bottom:1px solid #ddd; }
+.navbar .nav-link { color:#fff !important; font-weight:600; padding:0.4rem 1rem; line-height:1.2; }
+.navbar .nav-link:hover { color:#ffc107 !important; }
+
+.navbar-toggler { width:40px; height:40px; padding:0; border-radius:6px; display:flex; align-items:center; justify-content:center; }
+.navbar-toggler-icon { background-size:30px 30px; }
+
+.mobile-menu { display:none; width:100%; background-color:#212529; overflow:hidden; transition:0.3s; }
+.mobile-menu.show { display:block; }
+.mobile-menu a { display:block; color:#fff; padding:0.5rem 1rem; text-decoration:none; }
+.mobile-menu a:hover { background-color:#ffc107; color:#000; }
+
+.table { margin-top:1rem; }
+.form-control-sm { padding:.25rem .5rem; font-size:.875rem; }
+.modal-body img { display:block; margin:0 auto; }
+
+@media(max-width:576px){
+  .modal-dialog { max-width:95%; margin:1.75rem auto; }
+  .modal-footer { flex-wrap:wrap; gap:0.5rem; }
+}
+</style>
+
+<!-- Action Buttons -->
+<div class="mb-3 d-flex align-items-center gap-2 justify-content-end flex-wrap">
+  <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addStudentModal">+ Thêm Võ Sinh</button>
+
   <form id="importForm" action="{{ url_for('admin_students_import') }}" method="POST" enctype="multipart/form-data" class="d-inline">
     <input type="file" name="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none;" onchange="document.getElementById('importForm').submit();">
     <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('fileInput').click();">Import Excel</button>
   </form>
 
-  <!-- Export Excel -->
   <a href="{{ url_for('admin_students_export') }}" class="btn btn-warning btn-sm">Export Excel</a>
 </div>
 
-<!-- Modal Thêm Võ Sinh -->
+<!-- Modal Thêm -->
 <div class="modal fade" id="addStudentModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Thêm Võ Sinh</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <form id="addForm" action="{{ url_for('admin_students_add') }}" method="POST">
-          <div class="mb-2">
-            <label>Mã số:</label>
-            <input type="text" name="vocotruyenid" class="form-control" required>
-          </div>
-          <div class="mb-2">
-            <label>Họ và tên:</label>
-            <input type="text" name="hovaten" class="form-control" required>
-          </div>
-          <div class="mb-2">
-            <label>Năm sinh:</label>
-            <input type="number" name="namsinh" class="form-control">
-          </div>
-          <div class="mb-2">
-            <label>Giới tính:</label>
-            <select name="gioitinh" class="form-control">
-              <option value="">--Chọn--</option>
-              <option value="Nam">Nam</option>
-              <option value="Nữ">Nữ</option>
-            </select>
-          </div>
-
-          <!-- Cấp bậc -->
-          <div class="mb-2">
-            <label for="capbac-add">Cấp bậc:</label>
-            <select name="capbac" id="capbac-add"
-                    class="form-control capbac-input" data-target="add">
-              {% for i in range(1, 19) %}
-                <option value="{{ i }}">Cấp {{ i }}</option>
-              {% endfor %}
+          <div class="row g-2">
+            <div class="col-12 col-md-6"><label>Mã số:</label><input type="text" name="vocotruyenid" class="form-control form-control-sm" required></div>
+            <div class="col-12 col-md-6"><label>Họ và tên:</label><input type="text" name="hovaten" class="form-control form-control-sm" required></div>
+            <div class="col-12 col-md-4"><label>Năm sinh:</label><input type="number" name="namsinh" class="form-control form-control-sm"></div>
+            <div class="col-12 col-md-4"><label>Giới tính:</label>
+              <select name="gioitinh" class="form-control form-control-sm">
+                <option value="">--Chọn--</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4"><label>Cấp bậc:</label>
+              <select name="capbac" id="capbac-add" class="form-control form-control-sm capbac-input" data-target="add">
+                {% for i in range(1, 19) %}<option value="{{ i }}">Cấp {{ i }}</option>{% endfor %}
                 <option value="Phong tặng">Phong tặng</option>
-            </select>
-          </div>
+              </select>
+            </div>
 
-          <!-- Trình độ -->
-          <div class="mb-2">
-            <label>Trình độ:</label>
-            <input type="text" class="form-control trinhdo-display"
-                   id="trinhdo-add" value="" readonly>
-          </div>
+            <div class="col-12 col-md-6"><label>Trình độ:</label><input type="text" class="form-control form-control-sm trinhdo-display" id="trinhdo-add" readonly></div>
+            <div class="col-12 col-md-6 text-center"><label>Màu đai:</label><br>
+              <img id="maudai-add" src="{{ url_for('static', filename='img/default.jpg') }}" style="width:50px; height:auto;">
+            </div>
 
-          <!-- Màu đai -->
-          <div class="mb-2">
-            <label>Màu đai:</label><br>
-            <img id="maudai-add" src="{{ url_for('static', filename='default.jpg') }}"
-                 style="width:60px; height:auto;">
-          </div>
+            <div class="col-12 col-md-6"><label>Đơn vị:</label><input type="text" name="donvi" class="form-control form-control-sm"></div>
+            <div class="col-12 col-md-6"><label>Thành tích:</label><input type="text" name="thanhtich" class="form-control form-control-sm"></div>
 
-          <!-- Hidden input để gửi về server -->
-          <input type="hidden" name="trinhdo" id="hidden-trinhdo-add" value="">
-          <input type="hidden" name="maudai" id="hidden-maudai-add" value="">
-
-          <div class="mb-2">
-            <label>Đơn vị:</label>
-            <input type="text" name="donvi" class="form-control">
-          </div>
-          <div class="mb-2">
-            <label>Thành tích:</label>
-            <input type="text" name="thanhtich" class="form-control">
+            <input type="hidden" name="trinhdo" id="hidden-trinhdo-add">
+            <input type="hidden" name="maudai" id="hidden-maudai-add">
           </div>
         </form>
       </div>
@@ -97,10 +89,7 @@
   </div>
 </div>
 
-<hr>
-
-<!-- ==== Danh sách võ sinh ==== -->
-<h5>Danh sách Võ Sinh</h5>
+<!-- Danh sách võ sinh -->
 <table class="table table-bordered table-striped mt-2">
   <thead>
     <tr>
@@ -117,173 +106,125 @@
     </tr>
   </thead>
   <tbody>
-  {% for s in students %}
-  <tr>
-    <td>{{ s.vocotruyenid }}</td>
-    <td>{{ s.hovaten }}</td>
-    <td>{{ s.namsinh }}</td>
-    <td>{{ s.gioitinh }}</td>
-    <td>{{ s.capbac }}</td>
-    <td>{{ s.trinhdo }}</td>
-    <td>
-      {% if s.maudai %}
-<img src="{{ url_for('static', filename=s.maudai) }}" alt="Màu đai" style="width:50px;height:auto;">
-      {% else %}
-        -
-      {% endif %}
-    </td>
-    <td>{{ s.donvi }}</td>
-    <td>{{ s.thanhtich }}</td>
-    <td>
-      <!-- Nút sửa -->
-      <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editStudentModal{{ s.vocotruyenid }}">
-        Sửa
-      </button>
+    {% for s in students %}
+    <tr>
+      <td>{{ s.vocotruyenid }}</td>
+      <td>{{ s.hovaten }}</td>
+      <td>{{ s.namsinh }}</td>
+      <td>{{ s.gioitinh }}</td>
+      <td>{{ s.capbac }}</td>
+      <td>{{ s.trinhdo }}</td>
+      <td>
+        {% if s.maudai %}
+          <img src="{{ url_for('static', filename=s.maudai) }}" style="width:50px;height:auto;">
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      <td>{{ s.donvi }}</td>
+      <td>{{ s.thanhtich }}</td>
+      <td>
+        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editStudentModal{{ s.vocotruyenid }}">Sửa</button>
+        <a href="{{ url_for('admin_students_delete', vocotruyenid=s.vocotruyenid) }}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+      </td>
+    </tr>
 
-      <!-- Modal Sửa -->
-      <div class="modal fade" id="editStudentModal{{ s.vocotruyenid }}" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Sửa Võ Sinh</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-            </div>
-            <div class="modal-body">
-              <form id="editForm{{ s.vocotruyenid }}" action="{{ url_for('admin_students_update', vocotruyenid=s.vocotruyenid) }}" method="POST">
-                <div class="mb-2">
-                  <label>Mã số:</label>
-                  <input type="text" class="form-control" value="{{ s.vocotruyenid }}" readonly>
-                </div>
-                <div class="mb-2">
-                  <label>Họ và tên:</label>
-                  <input type="text" name="hovaten" class="form-control" value="{{ s.hovaten }}">
-                </div>
-                <div class="mb-2">
-                  <label>Năm sinh:</label>
-                  <input type="number" name="namsinh" class="form-control" value="{{ s.namsinh }}">
-                </div>
-                <div class="mb-2">
-                  <label>Giới tính:</label>
-                  <select name="gioitinh" class="form-control">
+    <!-- Modal Sửa -->
+    <div class="modal fade" id="editStudentModal{{ s.vocotruyenid }}" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Sửa Võ Sinh</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="editForm{{ s.vocotruyenid }}" action="{{ url_for('admin_students_update', vocotruyenid=s.vocotruyenid) }}" method="POST">
+              <div class="row g-2">
+                <div class="col-12 col-md-6"><label>Mã số:</label><input type="text" class="form-control form-control-sm" value="{{ s.vocotruyenid }}" readonly></div>
+                <div class="col-12 col-md-6"><label>Họ và tên:</label><input type="text" name="hovaten" class="form-control form-control-sm" value="{{ s.hovaten }}"></div>
+                <div class="col-12 col-md-4"><label>Năm sinh:</label><input type="number" name="namsinh" class="form-control form-control-sm" value="{{ s.namsinh }}"></div>
+                <div class="col-12 col-md-4"><label>Giới tính:</label>
+                  <select name="gioitinh" class="form-control form-control-sm">
                     <option value="">--Chọn--</option>
                     <option value="Nam" {% if s.gioitinh=="Nam" %}selected{% endif %}>Nam</option>
                     <option value="Nữ" {% if s.gioitinh=="Nữ" %}selected{% endif %}>Nữ</option>
                   </select>
                 </div>
-
-<div class="mb-2">
-  <label for="capbac-{{ s.vocotruyenid }}">Cấp bậc:</label>
-  <select name="capbac" id="capbac-{{ s.vocotruyenid }}"
-          class="form-control capbac-input" data-target="{{ s.vocotruyenid }}">
-    {% for i in range(1, 19) %}
-      <option value="{{ i }}" {% if s.capbac|string == i|string %}selected{% endif %}>Cấp {{ i }}</option>
-    {% endfor %}
-    <option value="Phong tặng" {% if s.capbac == "phong tang" %}selected{% endif %}>Phong tặng</option>
-  </select>
-</div>
-
-                <div class="mb-2">
-                  <label>Trình độ:</label>
-                  <input type="text" class="form-control trinhdo-display"
-                         id="trinhdo-{{ s.vocotruyenid }}"
-                         value="{{ s.trinhdo }}" readonly>
+                <div class="col-12 col-md-4"><label>Cấp bậc:</label>
+                  <select name="capbac" id="capbac-{{ s.vocotruyenid }}" class="form-control form-control-sm capbac-input" data-target="{{ s.vocotruyenid }}">
+                    {% for i in range(1,19) %}<option value="{{ i }}" {% if s.capbac|string==i|string %}selected{% endif %}>Cấp {{ i }}</option>{% endfor %}
+                    <option value="Phong tặng" {% if s.capbac=="Phong tặng" %}selected{% endif %}>Phong tặng</option>
+                  </select>
                 </div>
-
-                <div class="mb-2">
-                  <label>Màu đai:</label><br>
-                  <img id="maudai-{{ s.vocotruyenid }}"
-src="{{ url_for('static', filename=s.maudai if s.maudai else 'default.jpg') }}"
-                       style="width:60px; height:auto;">
+                <div class="col-12 col-md-6"><label>Trình độ:</label><input type="text" class="form-control form-control-sm trinhdo-display" id="trinhdo-{{ s.vocotruyenid }}" value="{{ s.trinhdo }}" readonly></div>
+                <div class="col-12 col-md-6 text-center"><label>Màu đai:</label><br>
+                  <img id="maudai-{{ s.vocotruyenid }}" src="{{ url_for('static', filename='img/' ~ (s.maudai if s.maudai else 'default.jpg')) }}" style="width:50px;height:auto;">
                 </div>
+                <div class="col-12 col-md-6"><label>Đơn vị:</label><input type="text" name="donvi" class="form-control form-control-sm" value="{{ s.donvi }}"></div>
+                <div class="col-12 col-md-6"><label>Thành tích:</label><input type="text" name="thanhtich" class="form-control form-control-sm" value="{{ s.thanhtich }}"></div>
 
                 <input type="hidden" name="trinhdo" id="hidden-trinhdo-{{ s.vocotruyenid }}" value="{{ s.trinhdo }}">
-<input type="hidden" name="maudai" id="hidden-maudai-{{ s.vocotruyenid }}" value="{{ s.maudai }}">
-
-                <div class="mb-2">
-                  <label>Đơn vị:</label>
-                  <input type="text" name="donvi" class="form-control" value="{{ s.donvi }}">
-                </div>
-                <div class="mb-2">
-                  <label>Thành tích:</label>
-                  <input type="text" name="thanhtich" class="form-control" value="{{ s.thanhtich }}">
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Hủy</button>
-              <button type="submit" class="btn btn-primary btn-sm" form="editForm{{ s.vocotruyenid }}">Cập nhật</button>
-            </div>
+                <input type="hidden" name="maudai" id="hidden-maudai-{{ s.vocotruyenid }}" value="{{ s.maudai }}">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-primary btn-sm" form="editForm{{ s.vocotruyenid }}">Cập nhật</button>
           </div>
         </div>
       </div>
-
-      <!-- Nút xóa -->
-      <a href="{{ url_for('admin_students_delete', vocotruyenid=s.vocotruyenid) }}"
-         class="btn btn-danger btn-sm"
-         onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
-    </td>
-  </tr>
-  {% endfor %}
+    </div>
+    {% endfor %}
   </tbody>
 </table>
 
-<!-- JS cập nhật trình độ + màu đai -->
+<!-- JS Trình độ & Màu đai -->
 <script>
-function getTrinhDo(capbac) {
-  const s = String(capbac).trim().toLowerCase();
+  const staticBase = "{{ url_for('static', filename='img/') }}";
 
-  if (/^\d+$/.test(s)) {
-    const n = parseInt(s);
-    if (n >= 1 && n <= 8) return "Võ sinh";
-    if (n >= 9 && n <= 12) return "Hướng dẫn viên";
-    if (n >= 13 && n <= 16) return "Huấn luyện viên";
-    if (n === 17) return "Chuẩn võ sư";
-    if (n === 18) return "Võ sư";
+  function getTrinhDo(capbac){
+    const s = String(capbac).trim().toLowerCase();
+    if(/^\d+$/.test(s)){
+      const n = parseInt(s);
+      if(n>=1 && n<=8) return "Võ sinh";
+      if(n>=9 && n<=12) return "Hướng dẫn viên";
+      if(n>=13 && n<=16) return "Huấn luyện viên";
+      if(n===17) return "Chuẩn võ sư";
+      if(n===18) return "Võ sư";
+    }
+    if(["phong tang","phongtang","phong tặng"].includes(s)) return "Đại võ sư";
+    return "Chưa xếp";
   }
-  if (["phong tang", "phongtang", "phong tặng"].includes(s)) return "Đại võ sư";
-  return "Chưa xếp";
-}
 
-function getMauDai(capbac) {
-  const s = String(capbac).trim().toLowerCase();
-
-  if (/^\d+$/.test(s)) {
-    return `/static/cap${s}.jpg`;
+  function getMauDai(capbac){
+    const s = String(capbac).trim().toLowerCase();
+    if(/^\d+$/.test(s)) return `cap${s}.jpg`;
+    if(["phong tang","phongtang","phong tặng"].includes(s)) return "phongtang.jpg";
+    return "default.jpg";
   }
-  if (["phong tang", "phongtang", "phong tặng"].includes(s)) {
-    return `/static/phongtang.jpg`;
-  }
-  return `/static/default.jpg`;
-}
 
-function initCapbacHandlers() {
-  document.querySelectorAll(".capbac-input").forEach(el => {
-    const handler = function() {
-      const id = this.dataset.target;
-      const raw = this.value;
-      const trinhdo = getTrinhDo(raw);
-      const maudai = getMauDai(raw);
+  document.addEventListener("DOMContentLoaded", function(){
+    document.querySelectorAll(".capbac-input").forEach(el=>{
+      const id = el.dataset.target;
+      el.addEventListener("change", function(){
+        const trinh = getTrinhDo(this.value);
+        const maudaiFile = getMauDai(this.value);
 
-      // cập nhật trình độ hiển thị
-      const trinhEl = document.getElementById("trinhdo-" + id);
-      if (trinhEl) trinhEl.value = trinhdo;
+        const t = document.getElementById("trinhdo-"+id);
+        if(t) t.value = trinh;
 
-      // cập nhật màu đai hiển thị
-      const imgEl = document.getElementById("maudai-" + id);
-      if (imgEl) imgEl.src = maudai;
+        const m = document.getElementById("maudai-"+id);
+        if(m) m.src = staticBase + maudaiFile;
 
-      // cập nhật hidden input
-      const hiddenTrinh = document.getElementById("hidden-trinhdo-" + id);
-      if (hiddenTrinh) hiddenTrinh.value = trinhdo;
+        const htrinh = document.getElementById("hidden-trinhdo-"+id);
+        if(htrinh) htrinh.value = trinh;
 
-      const hiddenMau = document.getElementById("hidden-maudai-" + id);
-      if (hiddenMau) hiddenMau.value = maudai;
-    };
-    el.addEventListener("change", handler);
-    el.addEventListener("input", handler);
+        const hmaudai = document.getElementById("hidden-maudai-"+id);
+        if(hmaudai) hmaudai.value = maudaiFile; // chỉ lưu tên file
+      });
+    });
   });
-}
-document.addEventListener("DOMContentLoaded", initCapbacHandlers);
 </script>
 
 {% endblock %}

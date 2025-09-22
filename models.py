@@ -127,8 +127,8 @@ def get_mau_dai(capbac: str, mode: str = "rel") -> str | None:
         filename = "default.jpg"
 
     if mode == "rel":
-        return filename
+        return f"img/{filename}"   # ✅ thêm thư mục img
     else:
         base_dir = os.path.abspath(os.path.dirname(__file__))
-        return os.path.join(base_dir, "static", filename)
+        return os.path.join(base_dir, "static", "img", filename)  # ✅ thêm img
 

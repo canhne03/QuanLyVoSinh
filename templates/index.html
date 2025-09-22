@@ -12,139 +12,96 @@
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/giaoDienChinh.css') }}">
   <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
-<style>
-  /* Nút toggle nhỏ, vuông */
-  .navbar-toggler {
-    padding: 0.2rem 0.2rem;  /* giảm padding */
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 8px;      /* làm vuông hơn */
-     margin-left: 0.2rem;
-  }
-
-  .navbar-toggler-icon {
-    width: 2rem;
-    height: 1.75rem;
-    background-size: contain;
-  }
-
-  /* Mobile menu xổ ra như quantri.html */
-  @media (max-width: 991px) {
-    .navbar-collapse {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background-color: #212529;
-      width: auto;
-      min-width: 200px;
-      border-radius: 0 0 6px 6px;
-      padding: 0.5rem 0.5rem;
-      z-index: 1000;
-    }
-    .navbar-collapse .nav-item {
-      text-align: left;
-    }
-    .navbar-collapse .dropdown-menu {
-      background-color: #212529;
-      border: none;
-      padding-left: 1.2rem;
-    }
-  }
-</style>
-
-
 
 </head>
 <body>
-
   <!-- Header -->
   <header class="header text-center">
     <img src="{{ url_for('static', filename='img/header.jpg') }}" alt="Header" class="img-fluid w-100">
   </header>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <!-- Nút toggle -->
-      <button class="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarMain"
-              aria-controls="navbarMain"
-              aria-expanded="false"
-              aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <!-- Menu -->
-      <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
-        <ul class="navbar-nav mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active fw-bold" href="{{ url_for('home') }}">TRANG CHỦ</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">GIỚI THIỆU</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Ban Chấp Hành</a></li>
-              <li><a class="dropdown-item" href="#">Tôn chỉ & Mục đích</a></li>
-              <li><a class="dropdown-item" href="#">Lịch sử hình thành</a></li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">TIN TỨC</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Thông báo</a></li>
-              <li><a class="dropdown-item" href="#">Hoạt động liên đoàn</a></li>
-              <li><a class="dropdown-item" href="#">Hoạt động CLB</a></li>
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">LIÊN KẾT</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">CÂU LẠC BỘ</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Danh sách lớp võ</a></li>
-              <li><a class="dropdown-item" href="#">Đội ngũ HLV</a></li>
-              <li><a class="dropdown-item" href="#">Lịch tập luyện</a></li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">TÀI LIỆU</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Văn bản, quy chế</a></li>
-              <li><a class="dropdown-item" href="#">Các mẫu đơn</a></li>
-              <li><a class="dropdown-item" href="#">Bảng điểm các kỳ thi</a></li>
-              <li><a class="dropdown-item" href="#">Thư viện hình ảnh – video</a></li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-warning" href="#" data-bs-toggle="dropdown">ĐĂNG NHẬP</a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#" data-role="admin">Admin</a></li>
-              <li><a class="dropdown-item" href="#" data-role="hlv">Huấn luyện viên</a></li>
-              <li><a class="dropdown-item" href="#" data-role="hoivien">Hội viên</a></li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <!-- Nút toggle -->
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarMain"
+            aria-controls="navbarMain"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+<span class="d-lg-none text-black mx-auto">Design by Võ Cảnh!!</span>
+    <!-- Menu -->
+    <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
+      <ul class="navbar-nav mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link " href="{{ url_for('home') }}">TRANG CHỦ</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">GIỚI THIỆU</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Ban Chấp Hành</a></li>
+            <li><a class="dropdown-item" href="#">Tôn chỉ & Mục đích</a></li>
+            <li><a class="dropdown-item" href="#">Lịch sử hình thành</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">TIN TỨC</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Thông báo</a></li>
+            <li><a class="dropdown-item" href="#">Hoạt động liên đoàn</a></li>
+            <li><a class="dropdown-item" href="#">Hoạt động CLB</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">LIÊN KẾT</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">CÂU LẠC BỘ</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Danh sách lớp võ</a></li>
+            <li><a class="dropdown-item" href="#">Đội ngũ HLV</a></li>
+            <li><a class="dropdown-item" href="#">Lịch tập luyện</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">TÀI LIỆU</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Văn bản, quy chế</a></li>
+            <li><a class="dropdown-item" href="#">Các mẫu đơn</a></li>
+            <li><a class="dropdown-item" href="#">Bảng điểm các kỳ thi</a></li>
+            <li><a class="dropdown-item" href="#">Thư viện hình ảnh – video</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle " href="#" data-bs-toggle="dropdown">ĐĂNG NHẬP</a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#" data-role="admin">Admin</a></li>
+            <li><a class="dropdown-item" href="#" data-role="hlv">Huấn luyện viên</a></li>
+            <li><a class="dropdown-item" href="#" data-role="hoivien">Hội viên</a></li>
+          </ul>
+        </li>
+      </ul>
     </div>
-  </nav>
+  </div>
+</nav>
 
   <!-- Hero -->
   <section class="hero text-center py-5 bg-light">
-    <h1 class="display-4 fw-bold">VÕ CỔ TRUYỀN VIỆT NAM</h1>
+    <h1 class="display-4 fw-bold">VÕ CỔ TRUYỀN</h1>
+    <h1 class="display-4 fw-bold"> VIỆT NAM</h1>
     <p class="slogan fs-5">Rèn thân – Luyện tâm – Dựng chí</p>
   </section>
 
-  <!-- Search -->
  <!-- Search Box -->
   <div class="search-box text-center my-4">
-      <div class="input-group mx-auto" style="max-width: 400px;">
-        <input type="text" class="form-control" id="searchInput" placeholder="Nhập Mã số hoặc Họ tên">
-        <button class="btn btn-primary" id="searchBtn">Tra cứu</button>
-      </div>
-
+    <div class="input-group mx-auto" style="max-width: 400px;">
+      <input type="text" class="form-control" id="searchInput" placeholder="Nhập Mã số hoặc Họ tên">
+      <button class="btn btn-primary" id="searchBtn">🔍</button>
+    </div>
     <!-- Kết quả nằm ngay dưới input -->
     <div id="searchResultContainer" class="mt-2" style="display:none; max-width: 400px; margin: 0 auto;">
       <div class="card shadow p-2">
@@ -173,7 +130,7 @@
               <input type="password" name="password" class="form-control mx-auto" placeholder="Mật khẩu" required>
             </div>
 
-            <button type="submit" class="btn btn-success w-50">Đăng nhập</button>
+            <button type="submit" class="btn btn-success w-40">Đăng nhập</button>
           </form>
           <p id="loginError" class="text-danger mt-2 text-center"></p>
         </div>
