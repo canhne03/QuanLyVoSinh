@@ -37,7 +37,10 @@
     <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('fileInput').click();">Import Excel</button>
   </form>
 
-  <a href="{{ url_for('admin_students_export') }}" class="btn btn-warning btn-sm">Export Excel</a>
+<a href="{{ url_for('admin_students_export') }}" class="btn btn-warning btn-sm" download="Danh_sach_vo_sinh.xlsx">
+  Export Excel
+</a>
+
 </div>
 
 <!-- Modal Thêm -->

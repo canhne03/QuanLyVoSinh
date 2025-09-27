@@ -29,10 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const targetId = e.target.dataset.target;
       const img = document.getElementById("belt-" + targetId);
 
-      if (val === "phong tang") {
-        img.src = "/static/phongtang.jpg";
+      if (val.toLowerCase() === "phong tang") {
+        img.src = "/static/img/phongtang.jpg";
       } else {
-        img.src = "/static/cap" + val + ".jpg";
+        img.src = "/static/img/cap" + val + ".jpg";
       }
     });
   });
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchResultContainer = document.getElementById("searchResultContainer");
   const searchResult = document.getElementById("searchResult");
 
-  // Nút đóng toàn bộ kết quả
+  // Nút đóng kết quả
   const closeSearchResult = document.createElement("span");
   closeSearchResult.textContent = "X";
   closeSearchResult.style.cursor = "pointer";
@@ -55,39 +55,43 @@ document.addEventListener("DOMContentLoaded", () => {
     searchResultContainer.style.display = "none";
     searchResult.innerHTML = "";
   };
-  // Thêm nút đóng vào container
   searchResultContainer.prepend(closeSearchResult);
 
-const renderStudents = (students) => {
-  if (!students || students.length === 0)
-    return '<div class="text-muted">Không tìm thấy võ sinh nào.</div>';
+  // Hàm xác định đường dẫn ảnh màu đai
+  function getBeltImage(capbac) {
+    if (!capbac) return "/static/img/default.jpg";
+    const s = String(capbac).trim().toLowerCase();
+    if (s === "phong tang" || s === "phongtang" || s === "phong tặng") return "/static/img/phongtang.jpg";
+    if (/^\d+$/.test(s)) return "/static/img/cap" + s + ".jpg";
+    return "/static/img/default.jpg";
+  }
 
-  return students.map(s => {
-const imgSrc = s.maudai ? s.maudai : '/static/img/default.png';
-    return `
-      <div class="mb-2 p-3 border-bottom" style="text-align:left; margin-left:40px;">
-        <h5 class="mb-1"><strong>Họ và tên:</strong> ${s.hovaten } <small class="text-muted">(${s.vocotruyenid})</small></h5>
-        <p class="mb-1"><strong>Năm sinh:</strong> ${s.namsinh || "-"}</p>
-        <p class="mb-1"><strong>Giới tính:</strong> ${s.gioitinh || "-"}</p>
-        <p class="mb-1"><strong>Đơn vị:</strong> ${s.donvi || "-"}</p>
-        <p class="mb-1"><strong>Cấp bậc:</strong> ${s.capbac || "-"}</p>
-        <p class="mb-1"><strong>Ngày thi:</strong> ${s.ngaydangky || "-"}</small></p>
-        <p class="mb-1"><strong>Trình độ:</strong> ${s.trinhdo || "-"}</p>
-        <p class="mb-1"><strong>Thành tích:</strong> ${s.thanhtich || "-"}</p>
-        <p class="mb-1">
-          <strong>Màu đai:</strong>
-          <img src="${imgSrc}" alt="Màu đai" style="height:24px; vertical-align:middle; margin-left:4px;">
-        </p>
-      </div>
-    `;
-  }).join("");
-};
+  const renderStudents = (students) => {
+    if (!students || students.length === 0)
+      return '<div class="text-muted">Không tìm thấy võ sinh nào.</div>';
 
+    return students.map(s => {
+      const beltImg = getBeltImage(s.capbac);
+      return `
+        <div class="mb-2 p-3 border-bottom" style="text-align:left; margin-left:40px;">
+          <p class="mb-1"><strong>Họ và tên:</strong> ${s.hovaten}</p>
+          <p class="mb-1"><strong>Mã số:</strong> ${s.vocotruyenid || "-"}</p>
+          <p class="mb-1"><strong>Năm sinh:</strong> ${s.namsinh || "-"}</p>
+          <p class="mb-1"><strong>Giới tính:</strong> ${s.gioitinh || "-"}</p>
+          <p class="mb-1"><strong>Đơn vị:</strong> ${s.donvi || "-"}</p>
+          <p class="mb-1"><strong>Cấp bậc:</strong> ${s.capbac || "-"}</p>
+          <p class="mb-1"><strong>Trình độ:</strong> ${s.trinhdo || "-"}</p>
+          <p class="mb-1"><strong>Màu đai:</strong> <img src="${beltImg}" style="width:100px;height:auto;"></p>
+          <p class="mb-1"><strong>Ngày thi:</strong> ${s.ngaydangky || "-"}</p>
+          <p class="mb-1"><strong>Thành tích:</strong> ${s.thanhtich || "-"}</p>
+        </div>
+      `;
+    }).join("");
+  };
 
-  // Xử lý nút Tra cứu
+  // Xử lý nút search
   searchBtn.addEventListener("click", async () => {
     const q = searchInput.value.trim();
-
     if (!q) {
       searchResultContainer.style.display = "block";
       searchResult.innerHTML = '<div class="text-danger">Vui lòng nhập tên hoặc mã số!</div>';
@@ -97,15 +101,12 @@ const imgSrc = s.maudai ? s.maudai : '/static/img/default.png';
     try {
       const res = await fetch(`/search/student?q=${encodeURIComponent(q)}`);
       const data = await res.json();
-
-      searchResultContainer.style.display = "block"; // hiển thị container
+      searchResultContainer.style.display = "block";
       if (!data.success) {
         searchResult.innerHTML = `<div class="text-danger">${data.error}</div>`;
         return;
       }
-
       searchResult.innerHTML = renderStudents(data.students);
-
     } catch (err) {
       searchResultContainer.style.display = "block";
       searchResult.innerHTML = '<div class="text-danger">Lỗi kết nối server!</div>';
@@ -113,3 +114,8 @@ const imgSrc = s.maudai ? s.maudai : '/static/img/default.png';
   });
 });
 
+
+document.getElementById("exportBtn").addEventListener("click", () => {
+    // đơn giản: mở link trực tiếp
+    window.location.href = "/admin/students/export";
+});

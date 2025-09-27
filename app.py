@@ -317,58 +317,21 @@ def admin_students_import():
 
     return render_template("admin/import_students.html")
 
+from io import BytesIO
 
-# ====== Export võ sinh (có ảnh màu đai từ static) ======
+
 @app.route("/admin/students/export")
 def admin_students_export():
-    if session.get("role") != "admin":
-        return redirect(url_for("home"))
+    # ... lấy dữ liệu từ DB, tạo Workbook
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
 
-    students = HoSoVoSinh.query.all()
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Danh sách võ sinh"
-
-    headers = ["Mã số", "Họ tên", "Năm sinh", "Giới tính", "Cấp bậc", "Trình độ", "Màu đai", "Đơn vị", "Thành tích"]
-    ws.append(headers)
-
-    row_num = 2
-    for s in students:
-        ws.cell(row=row_num, column=1, value=s.vocotruyenid)
-        ws.cell(row=row_num, column=2, value=s.hovaten)
-        ws.cell(row=row_num, column=3, value=s.namsinh)
-        ws.cell(row=row_num, column=4, value=s.gioitinh)
-        ws.cell(row=row_num, column=5, value=s.capbac)
-        ws.cell(row=row_num, column=6, value=get_trinh_do(s.capbac))
-        ws.cell(row=row_num, column=8, value=s.donvi)
-        ws.cell(row=row_num, column=9, value=s.thanhtich)
-
-        # Lấy path tuyệt đối cho file ảnh trong thư mục static
-        img_path = None
-        try:
-            img_path = get_mau_dai(s.capbac, mode="path") if s.capbac else None
-        except Exception:
-            img_path = None
-
-        if img_path and os.path.exists(img_path):
-            try:
-                img = XLImage(img_path)
-                img.width, img.height = 40, 20
-                ws.add_image(img, f"G{row_num}")
-            except Exception:
-                # bỏ qua nếu lỗi chèn ảnh
-                pass
-
-        row_num += 1
-
-    out = BytesIO()
-    wb.save(out)
-    out.seek(0)
     return send_file(
-        out,
+        output,
         as_attachment=True,
-        download_name="students_export.xlsx",
-        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        download_name="Danh_sach_vo_sinh.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 
 
@@ -417,27 +380,23 @@ def admin_students_update(vocotruyenid):
 
     db.session.commit()
     return redirect(url_for("admin_students"))
+from flask import jsonify, url_for
 
-@app.route("/search/student", methods=["GET"])
+@app.route("/search/student")
 def search_student():
-    query = request.args.get("q", "").strip()
-
-    if not query:
+    q = request.args.get("q", "").strip()
+    if not q:
         return jsonify({"success": False, "error": "Vui lòng nhập tên hoặc mã số!"})
 
-    # Tìm theo mã số chính xác hoặc tên chứa query
     students = HoSoVoSinh.query.filter(
-        (HoSoVoSinh.vocotruyenid.ilike(f"%{query}%")) |
-        (HoSoVoSinh.hovaten.ilike(f"%{query}%"))
+        (HoSoVoSinh.hovaten.ilike(f"%{q}%")) |
+        (HoSoVoSinh.vocotruyenid.ilike(f"%{q}%"))
     ).all()
 
-    if not students:
-        return jsonify({"success": False, "error": "Không tìm thấy võ sinh nào!"})
-
-    # Chuyển dữ liệu sang dict
     result = []
     for s in students:
-        # Lấy các thông tin đầy đủ, bao gồm màu đai (rel path)
+        # Lấy màu đai từ DB, chuẩn static/img
+        maudai_path = f"img/{s.maudai}" if s.maudai else "img/default.jpg"
         result.append({
             "vocotruyenid": s.vocotruyenid,
             "hovaten": s.hovaten,
@@ -446,16 +405,14 @@ def search_student():
             "donvi": s.donvi,
             "capbac": s.capbac,
             "trinhdo": s.trinhdo,
-            "maudai": url_for('static', filename=f"img/{s.maudai}") if s.maudai else None,
+            "maudai": url_for("static", filename=maudai_path),
             "thanhtich": s.thanhtich,
-            "ngaydangky": None,  # nếu có nhiều đăng ký, lấy đăng ký gần nhất
+            "ngaydangky": None,  # nếu có đăng ký, lấy gần nhất
         })
 
-        if s.dangky:
-            latest_dk = max(s.dangky, key=lambda d: d.ngaydk)
-            result[-1]["ngaydangky"] = latest_dk.ngaydk.strftime("%d/%m/%Y %H:%M")
-
     return jsonify({"success": True, "students": result})
+
+
 # ---------------- MAIN ----------------
 if __name__ == "__main__":
     # debug=True chỉ dùng khi dev
